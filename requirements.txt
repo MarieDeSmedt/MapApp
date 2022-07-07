@@ -6,7 +6,7 @@ streamlit-lottie == 0.0.3
 streamlit-aggrid == 0.2.3.post2 
 geopy == 2.2.0
 streamlit-option-menu == 0.3.2
-PulP == 2.6.0
+
 
 
 
