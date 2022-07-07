@@ -255,7 +255,6 @@ def display_zoneChaudes_page():
             
             # choisir le zoom
             df_zoomed = square_zoom(df_square)
-            st.session_state['to_pulp'] = df_zoomed
 
 
             # creation de variable pour creation de la carte
@@ -327,7 +326,6 @@ def display_zoneChaudes_page():
 
             # si on veut rajouter des cartes: démo ou CA/UC ca sera ici
 
-            st.session_state['df_to_pulp'] = df_to_display
             
 
 

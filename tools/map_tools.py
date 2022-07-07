@@ -131,8 +131,6 @@ def add_categorical_legend(map, title, colors, labels):
 
 def create_square_map(map, df,vmin, vmax, caption=''):
 
-    if not st.session_state['df_to_pulp'].empty:
-      df['shape'] = df['shape'].astype(str)
 
     # Convert shape column to a geoseries and specify crs
     df['shape'] = gpd.GeoSeries.from_wkt(df['shape'], crs = "EPSG:4326")
