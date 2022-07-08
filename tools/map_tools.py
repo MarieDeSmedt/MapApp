@@ -2,9 +2,8 @@ import geopandas as gpd
 import folium
 import branca.colormap as cm
 import streamlit as st
-import tools.data_tools as d_t
 import json
-from shapely import wkt
+
 
 def init_map(lat_lon = [50.6282,3.06881],width='80%',height='80%',tiles='CartoDB positron', zoom_start=6):
 
@@ -161,10 +160,9 @@ def create_square_map(map, df,vmin, vmax, caption=''):
         geo_json_dict = json.loads(geo_json)
         
         geo_json_dict["features"][0]['properties']['Score'] = r['Score']
-        if st.session_state['chosen_format']  == "DRIVE":
-            geo_json_dict["features"][0]['properties']['Isolement'] = r['Isolement']
-        elif st.session_state['chosen_format']  == "PIETON":
-            geo_json_dict["features"][0]['properties']['Isolement'] = r['Isolement']
+        
+        geo_json_dict["features"][0]['properties']['Isolement'] = r['Isolement']
+        
 
         geo_json = json.dumps(geo_json_dict)
  
@@ -187,50 +185,3 @@ def create_square_map(map, df,vmin, vmax, caption=''):
 
     return map
 
-
-def create_IC_pieton_map(map):
-    
-    # get carreuax pour carte d'intensité concurrentielle
-    df = d_t.get_square_intConc_pieton()
-    
-   
-    # Convert shape column to a geoseries and specify crs
-    df['shape'] = gpd.GeoSeries.from_wkt(df['shape'], crs = "EPSG:4326")
-
-    vmin = df['Score'].min()
-    vmax = df['Score'].max()
-    
-    # creation de la legende
-    colormap = cm.StepColormap(colors=['lightgreen','green','yellow','orange','red','darkred','black'],
-                                index=[1.25,1.54,2.25,3.86,5,20,50],
-                                vmin=vmin, 
-                                vmax=vmax,
-                                caption="Intensité concurentielle: moyenne ---------------------------------> trés forte")
-    
-    # fonction qui renvoi la forme et la couleur du carreau
-    def style_function(feature):
-        fillOpacity = 0.5
-        weight = 1
-        fillColor = colormap(feature['properties']['Score'])
-        color = colormap(feature['properties']['Score'])           
-        return {'fillColor': fillColor,'fillOpacity':fillOpacity,'color': color,'weight':weight  }
-
-    # boucle pour dessiner les carreaux un par un
-    for _, r in df.iterrows():
-        sim_geo = gpd.GeoSeries(r['shape']).simplify(tolerance=0.001)
-        geo_json = sim_geo.to_json()
-        geo_json_dict = json.loads(geo_json)
-        geo_json_dict["features"][0]['properties']['Score'] = r['Score']
-        geo_json = json.dumps(geo_json_dict)
-        geo_square = folium.GeoJson(data=geo_json,
-                            zoom_on_click=True,
-                            style_function= style_function)
-        folium.Popup(
-          "Score: " +str(round(r['Score'],2))
-          ).add_to(geo_square)
-        geo_square.add_to(map)
-    
-    " ajout de la legende sur la carte"
-    colormap.add_to(map)
-
-    return map

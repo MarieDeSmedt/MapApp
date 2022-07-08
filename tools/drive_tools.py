@@ -1,10 +1,7 @@
 import values as val
-
 import folium
 import json
-
 from folium.features import CustomIcon
-
 import tools.map_tools as map_t
 
 

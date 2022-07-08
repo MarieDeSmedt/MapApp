@@ -1,9 +1,7 @@
 
 import streamlit as st
-from streamlit_option_menu import option_menu
-import pandas as pd
-from tools.tools import display_zoneChaudes_page,open_map
-import tools.pieton_tools as p_t
+from tools.tools import display_zoneChaudes_page
+from tools.auth_tools import authentication,display_admin_page
 
 
 
@@ -51,11 +49,20 @@ if 'page' not in st.session_state:
     st.session_state.page=""
 if 'distance' not in st.session_state:
     st.session_state.distance = 7
+if 'role' not in st.session_state:
+    st.session_state.role = "no"
 
+# authentification
+if 'auth' not in st.session_state:
+    authentication()
+else:
+    if st.session_state.role == "admin":
+        display_admin_page()
+    elif st.session_state.role =="user":
+        display_zoneChaudes_page()
+    else:
+        st.error("no role for you")
 
-
-# affichage
-display_zoneChaudes_page()
 
 
 
