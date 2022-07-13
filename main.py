@@ -3,7 +3,10 @@ import streamlit as st
 from tools.tools import display_zoneChaudes_page
 
 import auth.user as us
+import auth.role as ro
 import auth.admin as admin
+
+from streamlit_option_menu import option_menu
 
 
 
@@ -54,6 +57,7 @@ if 'loggedIn' not in st.session_state:
 if 'role' not in st.session_state:
     st.session_state.role = "no"
 if 'init_db' not in st.session_state:
+    ro.init_role_db()
     us.init_user_db()
     st.session_state.init_db = True
 
@@ -63,7 +67,8 @@ if 'init_db' not in st.session_state:
 headerSection = st.container()
 mainSection = st.container()
 loginSection = st.container()
-logoutSection = st.container()
+
+
 
 
 def LoggedOut_Clicked():
@@ -71,23 +76,19 @@ def LoggedOut_Clicked():
 
 def show_logout_page():
     loginSection.empty()
-    with logoutSection:
-        st.button("Log Out", key="logout", on_click=LoggedOut_Clicked)
+    st.sidebar.button("Log Out", key="logout", on_click=LoggedOut_Clicked)
 
 def LoggedIn_Clicked(userName,password):
     user_is_login = us.login(userName, password)
     if user_is_login:
-        st.session_state.userName=st.session_state.user[0]
-        st.session_state.password=st.session_state.user[1]
-        st.session_state.role=st.session_state.user[2]
-        st.session_state.loggedIn = True
-        
+        st.sidebar.write(st.session_state.user)
+        st.session_state.userName=st.session_state.user[1]
+        st.session_state.password=st.session_state.user[2]
+        st.session_state.idrole=st.session_state.user[3]
+        st.session_state.loggedIn = True        
     else:
         st.session_state.loggedIn = False
         st.sidebar.error('Invalid user name or password')
-
-
-
 
 def show_login_page():
     with loginSection:
@@ -106,12 +107,18 @@ with headerSection:
     else:
         if st.session_state['loggedIn']:
             show_logout_page()
-            if st.session_state.role == "admin":
-                st.sidebar.write('user is admin')
-                admin.display_admin_page()
-            elif st.session_state.role =="user":
-                st.sidebar.write("user is user")
-                # display_zoneChaudes_page()
+            if st.session_state.idrole == 1:
+                st.session_state.page = option_menu(
+                        menu_title = None,
+                        options = ["Gestion des rôles", "Gestion des utilisateurs"], 
+                        default_index=0, 
+                        orientation="horizontal")
+                if st.session_state.page == "Gestion des utilisateurs":
+                    admin.display_user_admin_page()
+                elif st.session_state.page == "Gestion des rôles":
+                    admin.display_role_admin_page()
+            elif st.session_state.idrole == 2:
+                display_zoneChaudes_page()
             else:
                 st.sidebar.error('user has no role')
         else:
@@ -120,22 +127,4 @@ with headerSection:
 
 
 
-
-# #  set pages names
-# st.session_state.page = option_menu(
-#         menu_title = None,
-#         options = ["Zones chaudes", "Intensité concurentielle PIETON"], 
-#         # menu_icon="cast", 
-#         default_index=0, 
-#         orientation="horizontal")
-
-
-# # display page
-# if st.session_state.page == "Zones chaudes":
-#     display_zoneChaudes_page()
-# elif st.session_state.page == "Intensité concurentielle PIETON":
-#     st.session_state['chosen_format'] = "IC_pieton"
-#     display_intConc_pieton_page()
-# else:
-#     st.warning("modèle en cours de construction")
     

@@ -9,10 +9,13 @@ import sys
 conn = sqlite3.connect('data.db', check_same_thread=False)
 c = conn.cursor()
 
-# Functions
-def db_create_usertable():
+
+# CRUD functions
+
+# ####################################  CREATE TABLE
+def db_create_roletable():
 	try:
-		c.execute('CREATE TABLE IF NOT EXISTS user(userName TEXT,password TEXT, role TEXT )')
+		c.execute('CREATE TABLE IF NOT EXISTS role(id INTEGER PRIMARY KEY,name TEXT)')
 	except sqlite3.Error as er:
 		st.write('SQLite error: %s' % (' '.join(er.args)))
 		st.write("Exception class is: ", er.__class__)
@@ -20,24 +23,50 @@ def db_create_usertable():
 		exc_type, exc_value, exc_tb = sys.exc_info()
 		st.write(traceback.format_exception(exc_type, exc_value, exc_tb))
 
+# ####################################  CREATE 
 
-
-def db_add_user(userName,password,role):
+def db_add_role(name:str):
     try:
-        c.execute('INSERT INTO user(userName,password,role) VALUES (?,?,?)',(userName,password,role))
+        c.execute('INSERT INTO role(name) VALUES (?)',(name,))
         conn.commit()
     except sqlite3.Error as er:
         st.write('SQLite error: %s' % (' '.join(er.args)))
         st.write("Exception class is: ", er.__class__)
         st.write('SQLite traceback: ')
         exc_type, exc_value, exc_tb = sys.exc_info()
-        st.write(traceback.format_exception(exc_type, exc_value, exc_tb))	
+        st.write(traceback.format_exception(exc_type, exc_value, exc_tb))
 
+# ####################################  READ
 
-
-def db_get_all_users():
+def db_get_role_by_id(id_role:int):
 	try:
-		c.execute('SELECT * FROM user')
+		c.execute('SELECT * FROM role WHERE id="{}"'.format(id_role))
+		data = c.fetchone()
+	except sqlite3.Error as er:
+		st.write('SQLite error: %s' % (' '.join(er.args)))
+		st.write("Exception class is: ", er.__class__)
+		st.write('SQLite traceback: ')
+		exc_type, exc_value, exc_tb = sys.exc_info()
+		st.write(traceback.format_exception(exc_type, exc_value, exc_tb))
+	return data
+
+
+def db_get_role_by_name(name):
+	try:
+		c.execute('SELECT * FROM role WHERE name="{}"'.format(name))
+		data = c.fetchone()
+	except sqlite3.Error as er:
+		st.write('SQLite error: %s' % (' '.join(er.args)))
+		st.write("Exception class is: ", er.__class__)
+		st.write('SQLite traceback: ')
+		exc_type, exc_value, exc_tb = sys.exc_info()
+		st.write(traceback.format_exception(exc_type, exc_value, exc_tb))
+	return data
+
+
+def db_get_all_roles():
+	try:
+		c.execute('SELECT * FROM role')
 		data = c.fetchall()
 	except sqlite3.Error as er:
 		st.write('SQLite error: %s' % (' '.join(er.args)))
@@ -48,37 +77,15 @@ def db_get_all_users():
 	return data
 
 
+# ####################################  UPDATE
 
-def db_get_user(userName,password):
+# no need
+
+# ####################################  DELETE
+
+def db_delete_role(name :str):
 	try:
-		c.execute('SELECT * FROM user WHERE userName="{}" AND password="{}"'.format(userName,password))
-		data = c.fetchone()
-	except sqlite3.Error as er:
-		st.write('SQLite error: %s' % (' '.join(er.args)))
-		st.write("Exception class is: ", er.__class__)
-		st.write('SQLite traceback: ')
-		exc_type, exc_value, exc_tb = sys.exc_info()
-		st.write(traceback.format_exception(exc_type, exc_value, exc_tb))
-	return data
-	
-
-
-def db_delete_user(userName,password):
-	try:
-		c.execute('DELETE FROM user WHERE userName="{}" AND password="{}"'.format(userName,password))
-		conn.commit()
-	except sqlite3.Error as er:
-		st.write('SQLite error: %s' % (' '.join(er.args)))
-		st.write("Exception class is: ", er.__class__)
-		st.write('SQLite traceback: ')
-		exc_type, exc_value, exc_tb = sys.exc_info()
-		st.write(traceback.format_exception(exc_type, exc_value, exc_tb))
-	
-
-
-def db_update_user(new_userName,new_password,new_role,old_userName):
-	try:
-		c.execute('UPDATE user SET userName="{}", password="{}", role="{}" WHERE userName="{}" '.format(new_userName,new_password,new_role,old_userName))
+		c.execute('DELETE FROM role WHERE name="{}" '.format(name))
 		conn.commit()
 	except sqlite3.Error as er:
 		st.write('SQLite error: %s' % (' '.join(er.args)))
