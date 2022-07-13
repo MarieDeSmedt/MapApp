@@ -127,14 +127,14 @@ def open_map(map):
     with open('full_map.html', 'rb') as f:
         st.download_button('Download map', f, file_name='full_map.html') 
     
-    if st.session_state['chosen_format'] in ( "PIETON" , "DRIVE"): 
-            st.caption('Carreau isolé (vide): moins de 30 carreaux à potentiel dans un périmètre de 3.5km')
+
+    st.caption('Carreau isolé (vide): moins de 30 carreaux à potentiel dans un périmètre de 3.5km')
 
     #display map
     folium_static(map)
 
 
-def create_form(format):     
+def create_form():     
 
     # choisir le territoire
     chosen_territory_name,territories_json = choose_territory()  

@@ -145,10 +145,9 @@ def create_square_map(map, df,vmin, vmax, caption=''):
         fillColor = colormap(feature['properties']['Score'])
         color = colormap(feature['properties']['Score'])
 
-        if st.session_state['chosen_format']  == "DRIVE" or st.session_state['chosen_format']  == "PIETON" :
-            if feature['properties']['Isolement'] ==  'Low':
-                fillOpacity = 0
-                weight = 2  
+        if feature['properties']['Isolement'] ==  'Low':
+            fillOpacity = 0
+            weight = 2  
         return {'fillColor': fillColor,'fillOpacity':fillOpacity,'color': color,'weight':weight  }
 
     # boucle sur chaque ligne pour déssiner un carreau

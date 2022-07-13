@@ -81,7 +81,6 @@ def show_logout_page():
 def LoggedIn_Clicked(userName,password):
     user_is_login = us.login(userName, password)
     if user_is_login:
-        st.sidebar.write(st.session_state.user)
         st.session_state.userName=st.session_state.user[1]
         st.session_state.password=st.session_state.user[2]
         st.session_state.idrole=st.session_state.user[3]
