@@ -73,6 +73,7 @@ def update_old_user(new_username,new_password,new_idrole,old_username):
     db_update_user(new_username,new_password,new_idrole,old_username)
 
 
+
 def delete_user(username,password):
     """
     If the user exists, delete them

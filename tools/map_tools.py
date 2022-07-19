@@ -6,17 +6,36 @@ import json
 
 
 def init_map(lat_lon = [50.6282,3.06881],width='80%',height='80%',tiles='CartoDB positron', zoom_start=6):
+  """
+  It creates a map centered on the coordinates passed as argument, with a default zoom level of 6. If
+  the user has clicked on a marker, the map will be centered on the marker's coordinates and the zoom
+  level will be set to 11
+  
+  :param lat_lon: the latitude and longitude of the map's center
+  :param width: The width of the map, defaults to 80% (optional)
+  :param height: Height of the map, defaults to 80% (optional)
+  :param tiles: the type of map you want to use. You can choose from a variety of options, including
+  OpenStreetMap, Mapbox, and CartoDB, defaults to CartoDB positron (optional)
+  :param zoom_start: The initial zoom level of the map, defaults to 6 (optional)
+  :return: A map object
+  """
 
-    # si un zoom a été choisi
-    if len(st.session_state.zoom_on_centroid) >0 :
-      lat_lon= st.session_state.zoom_on_centroid
-      zoom_start=11
+  # si un zoom a été choisi
+  if len(st.session_state.zoom_on_centroid) >0 :
+    lat_lon= st.session_state.zoom_on_centroid
+    zoom_start=11
 
-    map = folium.Map(location= lat_lon,width=width, height=height,tiles=tiles, zoom_start=zoom_start)
-    return map
+  map = folium.Map(location= lat_lon,width=width, height=height,tiles=tiles, zoom_start=zoom_start)
+  return map
 
 
 def add_tileLayer(map) :
+  """
+  It adds a layer control to the map, and then adds four different tile layers to the map. 
+  
+  :param map: the map object
+  :return: The map object.
+  """
   # ajoute le choix du fond de carte
   folium.TileLayer('openstreetmap',attr='&copy;MDS').add_to(map)
   folium.TileLayer('Stamen Terrain',attr='&copy;MDS').add_to(map)
@@ -27,6 +46,15 @@ def add_tileLayer(map) :
 
 
 def add_categorical_legend(map, title, colors, labels):
+  """
+  It adds a legend to a folium map.
+  
+  :param map: the map object
+  :param title: The title of the legend
+  :param colors: a list of colors that correspond to the labels
+  :param labels: a list of strings that will be used as the legend labels
+  :return: A map with a legend.
+  """
   
   if len(colors) != len(labels):
       raise ValueError("colors and labels must have the same length.")

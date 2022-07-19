@@ -62,6 +62,7 @@ def get_all_roles():
     return all_roles
 
 
+
 def delete_role(name:str):
     """
     "If the role exists, delete it and return True, otherwise return False."

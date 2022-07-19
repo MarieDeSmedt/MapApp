@@ -8,6 +8,12 @@ import tools.map_tools as map_t
 
 
 def sites_icon(nom_enseigne):
+  """
+  It takes a string as an argument, and returns a custom icon object
+  
+  :param nom_enseigne: the name of the site
+  :return: the icon_todisplay variable.
+  """
 
   icons_json = json.loads(val.icon_list)
 
@@ -28,6 +34,13 @@ def sites_icon(nom_enseigne):
 
 
 def pin_sites(map,df_sites):
+  """
+  It takes a map and a dataframe as input, and returns a map with markers on it
+  
+  :param map: the map object
+  :param df_sites: the dataframe containing the sites' coordinates
+  :return: A map with the sites pinned on it.
+  """
  
   for latitude, longitude, nom_enseigne in zip(df_sites.latitude, df_sites.longitude, df_sites.nom_enseigne):
             folium.Marker(
