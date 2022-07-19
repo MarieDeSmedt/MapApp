@@ -78,10 +78,10 @@ def show_logout_page():
     loginSection.empty()
     st.sidebar.button("Log Out", key="logout", on_click=LoggedOut_Clicked)
 
-def LoggedIn_Clicked(userName,password):
-    user_is_login = us.login(userName, password)
+def LoggedIn_Clicked(username,password):
+    user_is_login = us.login(username, password)
     if user_is_login:
-        st.session_state.userName=st.session_state.user[1]
+        st.session_state.username=st.session_state.user[1]
         st.session_state.password=st.session_state.user[2]
         st.session_state.idrole=st.session_state.user[3]
         st.session_state.loggedIn = True        
@@ -92,15 +92,17 @@ def LoggedIn_Clicked(userName,password):
 def show_login_page():
     with loginSection:
         if st.session_state["loggedIn"] == False:
-            userName = st.text_input(label="",value="",placeholder="Enter your user name")
+            st.title("Connection")
+            username = st.text_input(label="",value="",placeholder="Enter your user name")
             password = st.text_input(label="",value="",placeholder="Enter password",type="password")
-            st.button("Login", key = "login", on_click=LoggedIn_Clicked, args=(userName,password))
+            st.button("Login", key = "login", on_click=LoggedIn_Clicked, args=(username,password))
             
 
 
 with headerSection:
-    st.title("Connection")
+    
     if 'loggedIn' not in st.session_state:
+        
         st.session_state['loggedIn'] = False
         show_login_page()
     else:

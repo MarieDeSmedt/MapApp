@@ -129,16 +129,25 @@ def add_categorical_legend(map, title, colors, labels):
 
 
 def create_square_map(map, df,vmin, vmax, caption=''):
-
+    """
+    It takes a map, a dataframe, a minimum and maximum value for the color scale, and a caption for the
+    color scale, and it returns a map with the dataframe's polygons drawn on it
+    
+    :param map: the map object to draw on it.
+    :param df: the dataframe containing the data to be displayed on the map
+    :param vmin: the minimum value of the color scale
+    :param vmax: the maximum value of the color scale
+    :param caption: the title of the legend
+    :return: A map with the squares and the legend
+    """
 
     # Convert shape column to a geoseries and specify crs
     df['shape'] = gpd.GeoSeries.from_wkt(df['shape'], crs = "EPSG:4326")
-
     # creation de la legende
     colormap = cm.LinearColormap(colors=['lightblue', 'red'],
                              index=[vmin,vmax], vmin=vmin, vmax=vmax,
                              caption=caption)
-    # fonction squi definit la forme et la couleur d'un carreau
+    # fonction qui definit la forme et la couleur d'un carreau
     def style_function(feature):
         fillOpacity = 0.7
         weight = 1
@@ -149,7 +158,6 @@ def create_square_map(map, df,vmin, vmax, caption=''):
             fillOpacity = 0
             weight = 2  
         return {'fillColor': fillColor,'fillOpacity':fillOpacity,'color': color,'weight':weight  }
-
     # boucle sur chaque ligne pour déssiner un carreau
     for _, r in df.iterrows():   
         # Without simplifying the representation of each borough,
@@ -157,18 +165,12 @@ def create_square_map(map, df,vmin, vmax, caption=''):
         sim_geo = gpd.GeoSeries(r['shape']).simplify(tolerance=0.001)
         geo_json = sim_geo.to_json()
         geo_json_dict = json.loads(geo_json)
-        
         geo_json_dict["features"][0]['properties']['Score'] = r['Score']
-        
         geo_json_dict["features"][0]['properties']['Isolement'] = r['Isolement']
-        
-
         geo_json = json.dumps(geo_json_dict)
- 
         geo_square = folium.GeoJson(data=geo_json,
                             zoom_on_click=True,
-                            style_function= style_function)
-                            
+                            style_function= style_function)              
         folium.Popup(
           "Rang:" + str(r['Rang'])+
           '</br>'+
@@ -176,11 +178,8 @@ def create_square_map(map, df,vmin, vmax, caption=''):
           '</br>'+
           "Score: " +str(round(r['Score'],2))
           ).add_to(geo_square)
-
         geo_square.add_to(map)
-    
     # ajout de la legende a la carte
     colormap.add_to(map)
-
     return map
 

@@ -40,22 +40,27 @@ def pin_sites(map,df_sites):
 
 
 def create_map(territory_lat_lon,df_conc,df_square,score_min,score_max):
+  """
+  It creates a map, adds squares to it, adds markers to it, and adds a legend to it
   
+  :param territory_lat_lon: a tuple of latitude and longitude coordinates for the center of the map
+  :param df_conc: a dataframe with the coordinates of the sites to pin
+  :param df_square: a dataframe with of the square to draw
+  :param score_min: the minimum  score
+  :param score_max: the maximum score 
+  :return: A map
+  """
   # création et centrage de la map
   map = map_t.init_map( territory_lat_lon)
-
   # affichage des square
   map = map_t.create_square_map(map ,df_square,vmin=score_min,vmax=score_max,caption = 'Probabilité de performance' )
-
   #creation des markers
   if not df_conc.empty :
     map = pin_sites(map, df_conc)
-  
   # Set legend on map
   map = map_t.add_categorical_legend(map, ' ',
                                 colors =[' ',' '],
                                 labels = ['Carreau plein : non isolé','Carreau vide: isolé'])
-  
   return map
 
 

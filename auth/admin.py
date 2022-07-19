@@ -36,25 +36,25 @@ def display_user_admin_page():
           
 
     with st.expander("update a user"):
-        old_userName = st.text_input("","",placeholder="Name du user à modifier",key ="old_userName")
-        new_userName = st.text_input("","",placeholder="nouveau nom",key ="new_userName")
+        old_username = st.text_input("","",placeholder="Name du user à modifier",key ="old_username")
+        new_username = st.text_input("","",placeholder="nouveau nom",key ="new_username")
         new_password = st.text_input("","",placeholder="nouveau mdp",key ="new_password")
         all_roles_list=get_all_role_list()
         new_role_name =st.selectbox("role",all_roles_list,key='select2')
         new_role = ro.get_role_by_name(new_role_name)
         new_id_role = new_role[0]
-        submit = st.button("Enregistrer",on_click=us.update_old_user, args=(new_userName,new_password,new_id_role,old_userName),key='update')
+        submit = st.button("Enregistrer",on_click=us.update_old_user, args=(new_username,new_password,new_id_role,old_username),key='update')
         if submit:
             us.view_all_users()
             st.success("user modifié")
 
     with st.expander("delete a user"):
-        userName = st.text_input("","",placeholder="Name du user à supprimer",key ="userName_todelete")
+        username = st.text_input("","",placeholder="Name du user à supprimer",key ="username_todelete")
         password = st.text_input("","",placeholder="password du user à supprimer",key ="password_todelete")
-        if userName and password:
-            user = us.db_get_user(userName,password)
+        if username and password:
+            user = us.db_get_user(username,password)
             if user:
-                delete = st.button("supprimer",on_click=us.delete_user, args=(userName,password), key='delete')
+                delete = st.button("supprimer",on_click=us.delete_user, args=(username,password), key='delete')
                 if delete:
                     us.view_all_users()
                     st.success("user supprimé")

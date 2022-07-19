@@ -64,53 +64,46 @@ def filter_score(df):
 
 
 def square_zoom(df):
-   
+    """
+    It takes a dataframe as input, and returns a dataframe as output. 
+    The input dataframe is the one that contains the chosen polygons to zoom on
+    The output dataframe is the one that contains the polygons that are within a certain distance of the
+    chosen polygon. 
+    :param df: the dataframe containing the data to be displayed
+    :return: A dataframe with the chosen square and the squares within a certain distance of it.
+    """
     list_rang = df.Rang.sort_values().to_list()
     list_rang.insert(0,"Tous les carreaux")
     zoom_choice = st.selectbox("Zoomer sur un carreau (rang):",list_rang)
-
     if zoom_choice != "Tous les carreaux":
-        
         # récupérer le carreau choisi
         df_chosen = df[df['Rang']==zoom_choice]
         value_shape = df_chosen.iloc[0]['shape']
-    
-        # récvupérer les coordonées du  centre du carreau choisi
+        # récupérer les coordonées du  centre du carreau choisi
         str_shape = wkt.loads(value_shape)
         lat_chosen = str_shape.centroid.y
         lon_chosen = str_shape.centroid.x
         st.session_state.zoom_on_centroid=(lat_chosen ,lon_chosen)
         a = st.session_state.zoom_on_centroid
-
         #  instancier le df to return
         _list=[]
         new_df = pd.DataFrame()
-
-
         # boucler sur tous les  autres carreaux
         for _,row in df.iterrows():
-            
             row_shape = row['shape']
-            # récvupérer les coorodonées du centre du carreau 
+            # récupérer les coorodonées du centre du carreau 
             row_str_shape = wkt.loads(row_shape)
             lat_row = row_str_shape.centroid.y
             lon_row = row_str_shape.centroid.x
-
-            
             # calculer la distance entre les deux centres
             b = (lat_row ,lon_row)
             dist = geodesic(a,b).km
-            
             # si la distance est < 7km
-            
             if dist <= st.session_state['distance']:
                 r = row.to_dict() # Converting the row to dictionary
                 _list.append(r) # appending the dictionary to list
-
-        
         # injecter ces carreau dans le nouveau df 
         new_df = pd.DataFrame(_list)
-    
         return new_df
     else:
         st.session_state.zoom_on_centroid=()
@@ -119,32 +112,29 @@ def square_zoom(df):
 
 
 def open_map(map):
-        
+    """
+    It saves the map as an html file, then creates a download button for the html file, and finally
+    displays the map
+    :param map: the map object
+    """   
     # save map for downloading
     map.save('full_map.html')
-
     #dowload button        
     with open('full_map.html', 'rb') as f:
         st.download_button('Download map', f, file_name='full_map.html') 
-    
-
     st.caption('Carreau isolé (vide): moins de 30 carreaux à potentiel dans un périmètre de 3.5km')
-
     #display map
     folium_static(map)
 
 
 def create_form():     
-
     # choisir le territoire
     chosen_territory_name,territories_json = choose_territory()  
     if len(chosen_territory_name)>0 :
             # recuperer latitude et longitude du territoire pour centrer map
             territory_lat_lon = d_t.get_territory_lat_lon(chosen_territory_name,territories_json)
-    
     # init de la liste des concurrents
     df_conc = pd.DataFrame()
-
     # selectionner les sites à faire apparaitre sur la map
     chosen_drives_list = st.sidebar.multiselect(
                             'Sélectionnez les enseignes à afficher',
@@ -156,13 +146,10 @@ def create_form():
         df_conc = d_t.get_drives(chosen_drives_list,chosen_territory_name)
     #  dowload les carreaux à dessiner
     df_square = d_t.get_square_drives(chosen_territory_name)
-     
     # sélectionner les valeurs de nb hab mini
     df_square = filter_nb_menages(df_square)
-    
     # sélectionner les valeurs du Score mini
     df_square = filter_score(df_square)
-
     return chosen_territory_name,territory_lat_lon, df_square, df_conc
 
 
@@ -208,7 +195,6 @@ def display_zoneChaudes_page():
             # affichage nombre de carreaux a afficher    
             st.info('Nombre de carreaux à potentiel: '+ str(df_zoomed.shape[0]) )
             
-
             df_to_display = df_zoomed.copy()
             df_to_display = df_to_display[['Rang','InspireCode','Score','Nb_menages','Isolement']]
             df_to_display['Score'] = df_to_display['Score'].round(2)

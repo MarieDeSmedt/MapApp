@@ -16,7 +16,7 @@ c = conn.cursor()
 
 def db_create_usertable():
 	try:
-		c.execute('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY,userName TEXT,password TEXT, id_role INTEGER )')
+		c.execute('CREATE TABLE IF NOT EXISTS user(id INTEGER PRIMARY KEY,username TEXT,password TEXT, id_role INTEGER )')
 	except sqlite3.Error as er:
 		st.write('SQLite error: %s' % (' '.join(er.args)))
 		st.write("Exception class is: ", er.__class__)
@@ -27,9 +27,9 @@ def db_create_usertable():
 
 # ######################################### CREATE
 
-def db_add_user(userName: str,password: str,id_role: int):
+def db_add_user(username: str,password: str,id_role: int):
     try:
-        c.execute('INSERT INTO user(userName,password,id_role) VALUES (?,?,?)',(userName,password,id_role))
+        c.execute('INSERT INTO user(username,password,id_role) VALUES (?,?,?)',(username,password,id_role))
         conn.commit()
     except sqlite3.Error as er:
         st.write('SQLite error: %s' % (' '.join(er.args)))
@@ -41,9 +41,9 @@ def db_add_user(userName: str,password: str,id_role: int):
 
 # ######################################### READ
 
-def db_get_user(userName:str,password:str):
+def db_get_user(username:str,password:str):
 	try:
-		c.execute('SELECT * FROM user WHERE userName="{}" AND password="{}"'.format(userName,password))
+		c.execute('SELECT * FROM user WHERE username="{}" AND password="{}"'.format(username,password))
 		data = c.fetchone()
 	except sqlite3.Error as er:
 		st.write('SQLite error: %s' % (' '.join(er.args)))
@@ -69,9 +69,9 @@ def db_get_all_users():
 
 # ######################################### UPDATE
 
-def db_update_user(new_userName:str,new_password:str,new_idrole:int,old_userName:str):
+def db_update_user(new_username:str,new_password:str,new_idrole:int,old_username:str):
 	try:
-		c.execute('UPDATE user SET userName="{}", password="{}", id_role="{}" WHERE userName="{}" '.format(new_userName,new_password,new_idrole,old_userName))
+		c.execute('UPDATE user SET username="{}", password="{}", id_role="{}" WHERE username="{}" '.format(new_username,new_password,new_idrole,old_username))
 		conn.commit()
 	except sqlite3.Error as er:
 		st.write('SQLite error: %s' % (' '.join(er.args)))
@@ -83,9 +83,9 @@ def db_update_user(new_userName:str,new_password:str,new_idrole:int,old_userName
 
 # ######################################### DELETE
 
-def db_delete_user(userName:str,password:str):
+def db_delete_user(username:str,password:str):
 	try:
-		c.execute('DELETE FROM user WHERE userName="{}" AND password="{}"'.format(userName,password))
+		c.execute('DELETE FROM user WHERE username="{}" AND password="{}"'.format(username,password))
 		conn.commit()
 	except sqlite3.Error as er:
 		st.write('SQLite error: %s' % (' '.join(er.args)))
