@@ -7,6 +7,12 @@ import auth.role as ro
 import auth.admin as admin
 
 from streamlit_option_menu import option_menu
+import sys
+import sentry_sdk
+from sentry_sdk.sessions import auto_session_tracking
+
+
+
 
 
 
@@ -98,34 +104,45 @@ def show_login_page():
             st.button("Login", key = "login", on_click=LoggedIn_Clicked, args=(username,password))
             
 
+def main():
+    with headerSection:
 
-with headerSection:
-    
-    if 'loggedIn' not in st.session_state:
-        
-        st.session_state['loggedIn'] = False
-        show_login_page()
-    else:
-        if st.session_state['loggedIn']:
-            show_logout_page()
-            if st.session_state.idrole == 1:
-                st.session_state.page = option_menu(
-                        menu_title = None,
-                        options = ["Gestion des rôles", "Gestion des utilisateurs"], 
-                        default_index=0, 
-                        orientation="horizontal")
-                if st.session_state.page == "Gestion des utilisateurs":
-                    admin.display_user_admin_page()
-                elif st.session_state.page == "Gestion des rôles":
-                    admin.display_role_admin_page()
-            elif st.session_state.idrole == 2:
-                display_zoneChaudes_page()
-            else:
-                st.sidebar.error('user has no role')
-        else:
+        if 'loggedIn' not in st.session_state:
+            
+            st.session_state['loggedIn'] = False
             show_login_page()
+        else:
+            if st.session_state['loggedIn']:
+                show_logout_page()
+                if st.session_state.idrole == 1:
+                    st.session_state.page = option_menu(
+                            menu_title = None,
+                            options = ["Gestion des rôles", "Gestion des utilisateurs"], 
+                            default_index=0, 
+                            orientation="horizontal")
+                    if st.session_state.page == "Gestion des utilisateurs":
+                        admin.display_user_admin_page()
+                    elif st.session_state.page == "Gestion des rôles":
+                        admin.display_role_admin_page()
+                elif st.session_state.idrole == 2:
+                    display_zoneChaudes_page()
+                else:
+                    st.sidebar.error('user has no role')
+            else:
+                show_login_page()
 
 
 
-
+if __name__ == "__main__":
+    try:
+        sentry_sdk.init(
+        dsn="https://72faa4d2e36b4a23b7535b04ed386f1d@o1346394.ingest.sentry.io/6624261",
+        traces_sample_rate=1.0
+        )
+        main()
+    except Exception as e:
+        with auto_session_tracking(session_mode="application"):
+            with sentry_sdk.push_scope():
+                sentry_sdk.capture_message(e)
+        
     

@@ -168,7 +168,7 @@ def display_zoneChaudes_page():
     # si le bouton est cliqué
     if st.session_state['open_map']:
         
-        
+        # a =[erreur_pour_test_sentry,]
         # choisir le zoom
         df_zoomed = square_zoom(df_square)
 

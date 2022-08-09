@@ -3,7 +3,7 @@ import folium
 import json
 from folium.features import CustomIcon
 import tools.map_tools as map_t
-
+import pandas as pd
 
 
 
@@ -33,7 +33,7 @@ def sites_icon(nom_enseigne):
 
 
 
-def pin_sites(map,df_sites):
+def pin_sites(map: map, df_sites: pd.DataFrame) -> map:
   """
   It takes a map and a dataframe as input, and returns a map with markers on it
   
