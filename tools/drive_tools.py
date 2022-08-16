@@ -14,8 +14,8 @@ def sites_icon(nom_enseigne):
   :param nom_enseigne: the name of the site
   :return: the icon_todisplay variable.
   """
-
-  icons_json = json.loads(val.icon_list)
+  icon_list = json.dumps(val.icons)
+  icons_json = json.loads(icon_list)
 
   for icon in icons_json['drive']:
     if icon['nom_enseigne'] == nom_enseigne:

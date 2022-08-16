@@ -108,7 +108,7 @@ icons ={
             'icon_size': (25,25)}]
     
 }
-icon_list = json.dumps(icons)
+
 
 formats_list = ['DRIVE','QUICK COMMERCE','LAD','PIETON']
 
@@ -161,7 +161,7 @@ cities = {
         }
     ]
 }
-city_list = json.dumps(cities)
+
 
 
 territories = {
@@ -194,4 +194,4 @@ territories = {
   }
     ]
 }
-territory_list = json.dumps(territories)
+

@@ -21,7 +21,8 @@ def init():
     st.session_state.zoom_on_centroid = ()
 
 def choose_territory():
-    territories_json = json.loads(val.territory_list)
+    territory_list = json.dumps(val.territories)
+    territories_json = json.loads(territory_list)
     territory_names = []
     for territory in territories_json['territory']:
         territory_names.append(territory['territoryLabel'])
