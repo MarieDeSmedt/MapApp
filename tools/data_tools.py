@@ -3,18 +3,12 @@ import streamlit as st
 import pandas as pd
 import pickle
 
-
-
-
 #### LOAD DATA ######################################################################################################
-
-
 
 @st.cache
 def load_drives():
   data = pd.read_csv("csv/drives.csv")
   return data
-
 
 
 @st.cache
